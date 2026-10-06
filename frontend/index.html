@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Bug That Only Exists on Screen &bull; Gemma 4 UI Inspector</title>
+  <!-- Modern Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header Bar -->
+  <header class="app-header">
+    <div class="header-inner">
+      <div class="logo-group">
+        <svg class="app-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="m4.93 4.93 4.24 4.24"></path>
+          <path d="m14.83 9.17 4.24-4.24"></path>
+          <path d="m14.83 14.83 4.24 4.24"></path>
+          <path d="m9.17 14.83-4.24 4.24"></path>
+        </svg>
+        <span class="app-title-nav">The Bug That Only Exists on Screen</span>
+      </div>
+      <div class="header-badges">
+        <span class="powered-badge">
+          <span class="badge-dot"></span>
+          Powered by Gemma 4
+        </span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-container">
+      <h1 class="hero-title">The Bug That Only Exists on Screen</h1>
+      <p class="hero-subtitle">Find UI problems that are visible but difficult to explain.</p>
+      <p class="hero-description">
+        Upload any web or mobile interface screenshot. Gemma 4 inspects visual hierarchy, contrast ratios, alignment flaws, and layout defects to generate an actionable bug report with suggested fixes.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main Content Grid -->
+  <main class="main-content">
+    <div class="workspace-grid">
+
+      <!-- LEFT COLUMN: Upload & Preview Card -->
+      <section class="card upload-card" aria-label="Screenshot Upload Section">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+              <circle cx="8.5" cy="8.5" r="1.5"></circle>
+              <polyline points="21 15 16 10 5 21"></polyline>
+            </svg>
+            Upload Screenshot
+          </h2>
+          <span class="format-pill">PNG &bull; JPG &bull; WEBP</span>
+        </div>
+
+        <!-- Drag & Drop Zone -->
+        <div id="dropzone" class="dropzone" tabindex="0" role="button" aria-label="Upload screenshot drop zone">
+          <input type="file" id="file-input" accept="image/png, image/jpeg, image/jpg, image/webp" hidden>
+          <div class="dropzone-body">
+            <div class="drop-icon-container">
+              <svg class="drop-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+            </div>
+            <p class="drop-title"><strong>Drag and drop your screenshot</strong> or</p>
+            <button type="button" id="browse-btn" class="btn btn-secondary">
+              <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7"></path>
+                <line x1="16" y1="5" x2="22" y2="5"></line>
+                <line x1="19" y1="2" x2="19" y2="8"></line>
+                <circle cx="9" cy="9" r="2"></circle>
+                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
+              </svg>
+              Choose Screenshot
+            </button>
+            <p class="drop-help">Supported formats: PNG, JPG, JPEG, WEBP (Max 15MB)</p>
+          </div>
+        </div>
+
+        <!-- Selected File Metadata Bar (Hidden by default) -->
+        <div id="file-meta" class="file-meta hidden">
+          <div class="file-info-group">
+            <svg class="meta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+            </svg>
+            <div class="meta-text">
+              <span id="file-name" class="meta-filename">screenshot.png</span>
+              <span id="file-size" class="meta-filesize">1.4 MB</span>
+            </div>
+          </div>
+          <button type="button" id="remove-file-btn" class="btn-remove" title="Remove file" aria-label="Remove selected screenshot">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+
+        <!-- Image Preview Container (Hidden by default) -->
+        <div id="preview-wrapper" class="preview-wrapper hidden">
+          <div class="preview-topbar">
+            <span class="preview-title">Screenshot Preview</span>
+            <span id="preview-dimensions" class="dimensions-badge">0 &times; 0</span>
+          </div>
+          <div class="preview-frame">
+            <img id="image-preview" src="" alt="Screenshot uploaded for analysis">
+          </div>
+        </div>
+
+        <!-- Action Footer -->
+        <div class="upload-action-footer">
+          <button type="button" id="analyze-btn" class="btn btn-primary" disabled>
+            <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
+            </svg>
+            Analyze with Gemma 4
+          </button>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: Results Dashboard -->
+      <section class="card results-card" aria-label="Analysis Results Section">
+        <div class="card-header">
+          <h2 class="card-title">
+            <svg class="section-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="20" x2="18" y2="10"></line>
+              <line x1="12" y1="20" x2="12" y2="4"></line>
+              <line x1="6" y1="20" x2="6" y2="14"></line>
+            </svg>
+            Results Dashboard
+          </h2>
+          <span id="status-pill" class="status-pill status-idle">Ready</span>
+        </div>
+
+        <!-- 1. EMPTY STATE -->
+        <div id="empty-state" class="state-panel empty-state">
+          <div class="state-icon-circle">
+            <svg class="state-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+              <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+              <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+          </div>
+          <h3 class="state-heading">Upload a screenshot to start detecting UI bugs.</h3>
+          <p class="state-desc">
+            Choose an image of your application UI. Gemma 4 will identify layout misalignments, unreadable text contrast, clipped elements, and usability flaws with severity ratings.
+          </p>
+        </div>
+
+        <!-- 2. LOADING STATE -->
+        <div id="loading-state" class="state-panel loading-state hidden">
+          <div class="scanner-container">
+            <div class="spin-ring"></div>
+            <div class="pulse-core"></div>
+          </div>
+          <h3 class="state-heading">Gemma 4 is analyzing your screenshot...</h3>
+          <p class="state-desc">
+            Inspecting visual hierarchy, contrast ratios, and design consistency. This typically takes 8–15 seconds.
+          </p>
+          <div class="loading-tags">
+            <span class="loading-tag">Analyzing Layout</span>
+            <span class="loading-tag">Checking Contrast</span>
+            <span class="loading-tag">Formulating Fixes</span>
+          </div>
+        </div>
+
+        <!-- 3. ERROR STATE -->
+        <div id="error-state" class="state-panel error-state hidden">
+          <div class="state-icon-circle error-circle">
+            <svg class="state-svg text-error" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"></circle>
+              <line x1="12" y1="8" x2="12" y2="12"></line>
+              <line x1="12" y1="16" x2="12.01" y2="16"></line>
+            </svg>
+          </div>
+          <h3 id="error-title" class="state-heading text-error">Unable to Complete Analysis</h3>
+          <p id="error-message" class="state-desc">An error occurred during communication.</p>
+          <button type="button" id="retry-btn" class="btn btn-secondary">
+            <svg class="btn-icon-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21.5 2v6h-6M21.34 15.57a10 10 0 1 1-.57-8.38l5.67-5.67"></path>
+            </svg>
+            Try Again
+          </button>
+        </div>
+
+        <!-- 4. RESULTS DASHBOARD (Populated dynamically) -->
+        <div id="results-dashboard" class="results-dashboard hidden">
+
+          <!-- Health Score & Statistics Row -->
+          <div class="stats-row">
+            <!-- UI Health Score -->
+            <div class="stat-card score-card">
+              <span class="stat-label">UI Health Score</span>
+              <div class="score-number-group">
+                <span id="score-value" class="score-big">85</span>
+                <span class="score-total">/ 100</span>
+              </div>
+              <div class="score-progress-track">
+                <div id="score-progress-bar" class="score-progress-fill" style="width: 85%;"></div>
+              </div>
+            </div>
+
+            <!-- Bug Breakdown Statistics -->
+            <div class="stat-card breakdown-card">
+              <span class="stat-label">Bug Severity Breakdown</span>
+              <div class="severity-stat-pills">
+                <div class="stat-pill-item pill-high">
+                  <span class="stat-pill-count" id="stat-high-count">0</span>
+                  <span class="stat-pill-name">High</span>
+                </div>
+                <div class="stat-pill-item pill-med">
+                  <span class="stat-pill-count" id="stat-med-count">0</span>
+                  <span class="stat-pill-name">Medium</span>
+                </div>
+                <div class="stat-pill-item pill-low">
+                  <span class="stat-pill-count" id="stat-low-count">0</span>
+                  <span class="stat-pill-name">Low</span>
+                </div>
+              </div>
+              <div class="model-badge-info">Analyzed by Gemma 4 (26B A4B IT)</div>
+            </div>
+          </div>
+
+          <!-- Executive Summary Box -->
+          <div class="summary-box">
+            <div class="summary-title-bar">
+              <svg class="summary-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <span>Executive Summary</span>
+            </div>
+            <p id="summary-content" class="summary-body">...</p>
+          </div>
+
+          <!-- Bug Cards Section -->
+          <div class="bug-reports-container">
+            <div class="bug-reports-header">
+              <h3 class="bug-reports-title">Detected Issues</h3>
+              <span id="bug-count-badge" class="count-badge">0 Issues Found</span>
+            </div>
+
+            <div id="bugs-list" class="bugs-list">
+              <!-- Cards generated dynamically -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </div>
+  </main>
+
+  <!-- Accessible Footer -->
+  <footer class="app-footer">
+    <div class="footer-inner">
+      <p>&copy; 2026 The Bug That Only Exists on Screen &bull; Hacktoberfest Hack Day Project</p>
+      <p class="footer-tech">Gemma 4 Multimodal Model &bull; FastAPI Backend &bull; Vanilla JavaScript</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
